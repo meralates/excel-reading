@@ -1,6 +1,7 @@
 package com.example.excelreading;
 
 public enum Equipment {
+<<<<<<< HEAD
     MANUAL_WHEELCHAIR("Manuel Tekerlekli Sandalye",1.5),
     ELECTRIC_WHEELCHAIR("Akülü Sandalye",2.0),
     GOLF_CART("Golf Aracı",5.0),
@@ -19,4 +20,6 @@ public enum Equipment {
     public double getSpeed() {
         return speed;
     }
+=======
+>>>>>>> 46f56253e455f639767b4fddcee6bacec0d9e9e9
 }

@@ -1,5 +1,6 @@
 package com.example.excelreading;
 
+<<<<<<< HEAD
 import jakarta.persistence.*;
 import lombok.Generated;
 import lombok.Getter;
@@ -20,4 +21,7 @@ public class RegionDurationConf { //spring bu sınıfı tablo olarak tanımlar.
     private String equipmentConf;
 
 
+=======
+public class RegionDurationConf {
+>>>>>>> 46f56253e455f639767b4fddcee6bacec0d9e9e9
 }

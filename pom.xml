@@ -60,6 +60,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+<<<<<<< HEAD
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
@@ -93,6 +94,8 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+=======
+>>>>>>> 46f56253e455f639767b4fddcee6bacec0d9e9e9
 	</dependencies>
 
 	<build>
