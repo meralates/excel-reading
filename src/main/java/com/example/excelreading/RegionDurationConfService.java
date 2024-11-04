@@ -1,6 +1,4 @@
 package com.example.excelreading;
-
-<<<<<<< HEAD
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.poi.ss.usermodel.Row;
@@ -30,7 +28,7 @@ public class RegionDurationConfService {
         this.repository = repository;
     }
 
-    @Transactional
+    @Transactional //veritabanı için
     public void processExcelFile() throws IOException {
         // Dosyayı filePath kullanarak aç
         try (InputStream inputStream = new FileInputStream(filePath)) {
@@ -84,7 +82,4 @@ public class RegionDurationConfService {
             throw new RuntimeException("Error creating json",e);
         }
     }
-=======
-public class RegionDurationConfService {
->>>>>>> 46f56253e455f639767b4fddcee6bacec0d9e9e9
 }
