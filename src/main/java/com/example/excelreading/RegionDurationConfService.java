@@ -1,6 +1,7 @@
 package com.example.excelreading;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -21,9 +22,6 @@ public class RegionDurationConfService {
 
     private final RegionDurationConfRepository repository;
 
-    // Dosya yolu
-    private final String filePath = "C:\\Users\\MONSTER\\Desktop\\excel-reading\\25.10.2024 mesafe.xlsm";
-
     public RegionDurationConfService(RegionDurationConfRepository repository) {
         this.repository = repository;
     }
@@ -31,6 +29,8 @@ public class RegionDurationConfService {
     @Transactional //veritabanı için
     public void processExcelFile() throws IOException {
         // Dosyayı filePath kullanarak aç
+        // Dosya yolu
+        String filePath = "C:\\Users\\MONSTER\\Desktop\\excel-reading\\25.10.2024 mesafe.xlsm";
         try (InputStream inputStream = new FileInputStream(filePath)) {
             Workbook workbook = new XSSFWorkbook(inputStream);
             Sheet sheet = workbook.getSheetAt(0);
@@ -38,13 +38,15 @@ public class RegionDurationConfService {
             workbook.close();
         }
     }
-    private void processSheet(Sheet sheet) {
+   /* private void processSheet(Sheet sheet) {
         List<RegionDurationConf> records = new ArrayList<>();
         Row headerRow = sheet.getRow(0);
 
         for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
             Row row = sheet.getRow(i);
             if (row == null) continue;
+
+
 
             String fromRegion = row.getCell(0).getStringCellValue().trim(); // Trim boşlukları temizle
             for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
@@ -58,6 +60,48 @@ public class RegionDurationConfService {
 
         repository.saveAll(records); // Tüm kayıtları veritabanına kaydet
     }
+
+    */
+
+
+    private void processSheet(Sheet sheet) {
+        List<RegionDurationConf> records = new ArrayList<>();
+        Row headerRow = sheet.getRow(0);
+
+        // İlk satırı başlık olarak kullanıyoruz, veriler 1. satırdan itibaren işleniyor.
+        for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+            Row row = sheet.getRow(i);
+            if (row == null || row.getCell(0) == null) continue;
+
+            // fromRegion verisini al ve boşsa kaydı atla.
+            String fromRegion = row.getCell(0).getStringCellValue().trim();
+            if (fromRegion.isEmpty()) continue;
+
+            // Diğer sütunları dolaşarak toRegion ve distance verilerini al.
+            for (int j = 1; j < row.getPhysicalNumberOfCells(); j++) {
+                if (headerRow.getCell(j) == null || row.getCell(j) == null) continue;
+
+                String toRegion = headerRow.getCell(j).getStringCellValue().trim();
+                if (toRegion.isEmpty()) continue;
+
+                // Hücre sayısal değilse atla
+                if (row.getCell(j).getCellType() != CellType.NUMERIC) continue;
+
+                double distance = row.getCell(j).getNumericCellValue();
+                String equipmentConfJson = calculateDurationJson(distance);
+                System.out.println("From: " + fromRegion + ", To: " + toRegion + ", EquipmentConf: " + equipmentConfJson);
+
+                records.add(createRegionDurationConf(fromRegion, toRegion, equipmentConfJson));
+            }
+        }
+
+        // Eğer listede kayıt varsa veritabanına kaydet
+        if (!records.isEmpty()) {
+            repository.saveAll(records);
+        }
+    }
+
+
 
 
     private RegionDurationConf createRegionDurationConf(String from, String to, String equipmentConf) {
